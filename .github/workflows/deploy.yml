@@ -1,0 +1,49 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Enable pnpm
+        run: |
+          corepack enable
+          pnpm -v || npm i -g pnpm
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web
+        run: pnpm --filter cinechat-web build
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+            APP_DIR=${{ secrets.APP_DIR }}
+            SERVICE_USER=${{ secrets.SERVICE_USER }}
+            if [ ! -d "$APP_DIR" ]; then sudo mkdir -p "$APP_DIR"; fi
+            cd "$APP_DIR"
+            if [ -d .git ]; then
+              sudo -u "$SERVICE_USER" git pull --ff-only
+            else
+              sudo -u "$SERVICE_USER" git clone https://github.com/${{ github.repository }} .
+            fi
+            sudo -u "$SERVICE_USER" pnpm install --frozen-lockfile
+            sudo -u "$SERVICE_USER" pnpm --filter cinechat-web build
+            sudo systemctl restart cinechat-server@"$SERVICE_USER" cinechat-web@"$SERVICE_USER"
