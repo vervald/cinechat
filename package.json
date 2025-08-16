@@ -1,0 +1,16 @@
+{
+  "name": "cinechat",
+  "private": true,
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,green \"pnpm --filter cinechat-server dev\" \"pnpm --filter cinechat-web dev\"",
+    "build": "pnpm -r build",
+    "start": "concurrently -n server,web -c blue,green \"pnpm --filter cinechat-server start\" \"pnpm --filter cinechat-web start\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}

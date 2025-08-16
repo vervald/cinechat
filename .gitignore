@@ -1,0 +1,25 @@
+# Node / pnpm
+node_modules/
+pnpm-debug.log*
+*.log
+
+# OS
+.DS_Store
+
+# Env files
+.env
+server/.env
+web/.env.local
+web/.env.production
+
+# Next.js
+web/.next/
+web/out/
+
+# Build / coverage
+coverage/
+dist/
+
+# SQLite data
+server/data.db
+server/*.db*
