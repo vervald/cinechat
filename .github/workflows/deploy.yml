@@ -34,15 +34,23 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            set -e
+            set -eux
             APP_DIR=${{ secrets.APP_DIR }}
-            if [ ! -d "$APP_DIR" ]; then sudo mkdir -p "$APP_DIR"; fi
-            cd "$APP_DIR"
-            if [ -d .git ]; then
-               git pull --ff-only
+            if [ -z "$APP_DIR" ]; then echo "APP_DIR secret missing"; exit 1; fi
+            # prepare dir
+            if [ ! -d "$APP_DIR" ]; then mkdir -p "$APP_DIR"; fi
+            if [ ! -d "$APP_DIR/.git" ]; then
+              cd "$APP_DIR"
+              git clone https://github.com/${{ github.repository }} .
             else
-               git clone https://github.com/${{ github.repository }} .
+              cd "$APP_DIR"
+              git fetch --depth=1 origin main
+              git reset --hard origin/main
             fi
+            # ensure pnpm
+            command -v pnpm >/dev/null 2>&1 || npm i -g pnpm
             pnpm install --frozen-lockfile
             pnpm --filter cinechat-web build
-            sudo systemctl restart cinechat-server cinechat-web
+            # restart services (support both non-templated and @root templated names)
+            systemctl restart cinechat-server || systemctl restart cinechat-server@root || true
+            systemctl restart cinechat-web || systemctl restart cinechat-web@root || true
