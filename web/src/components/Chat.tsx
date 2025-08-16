@@ -168,10 +168,13 @@ export function Chat({ movieId }: { movieId: number }) {
             </div>
             <button
               onClick={()=>sendReply(msg.id)}
-              className="rounded-lg px-3 py-2 bg-zinc-200 text-zinc-900 text-sm whitespace-nowrap"
+              aria-label="Отправить"
+              title="Отправить"
+              className="rounded-full w-9 h-9 bg-zinc-200 text-zinc-900 flex items-center justify-center"
             >
-              <span className="hidden sm:inline">Отправить</span>
-              <span className="inline sm:hidden">Отпр.</span>
+              <svg viewBox="0 0 24 24" className="w-5 h-5" aria-hidden="true">
+                <path d="M2 21l21-9L2 3l5 9-5 9zm7-3l9-6-9-6v12z" fill="currentColor" />
+              </svg>
             </button>
             <button
               onClick={()=>{ setActiveReplyId(null); setReplyInput(''); }}
@@ -199,7 +202,7 @@ export function Chat({ movieId }: { movieId: number }) {
           value={input}
           onChange={e=>setInput(e.target.value)}
           onKeyDown={e=>{ if(e.key==='Enter') sendRoot(); }}
-          placeholder="Напишите без регистрации..."
+          placeholder="Введите текст"
           className="flex-1 rounded-lg bg-zinc-950 px-3 py-2 outline-none ring-1 ring-zinc-800 focus:ring-zinc-600 min-w-0"
         />
         <div className="relative">
@@ -220,9 +223,15 @@ export function Chat({ movieId }: { movieId: number }) {
             </div>
           )}
         </div>
-        <button onClick={sendRoot} className="rounded-lg px-4 py-2 bg-zinc-200 text-zinc-900 font-medium whitespace-nowrap">
-          <span className="hidden sm:inline">Отправить</span>
-          <span className="inline sm:hidden">Отпр.</span>
+        <button
+          onClick={sendRoot}
+          aria-label="Отправить"
+          title="Отправить"
+          className="rounded-full w-10 h-10 bg-zinc-200 text-zinc-900 flex items-center justify-center"
+        >
+          <svg viewBox="0 0 24 24" className="w-5 h-5" aria-hidden="true">
+            <path d="M2 21l21-9L2 3l5 9-5 9zm7-3l9-6-9-6v12z" fill="currentColor" />
+          </svg>
         </button>
       </div>
       <ul className="space-y-3 max-h-[60vh] overflow-auto pr-1 w-full max-w-full">
