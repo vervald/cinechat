@@ -113,9 +113,13 @@ export function Chat({ movieId }: { movieId: number }) {
         <div className="mt-1 whitespace-pre-wrap break-words">{msg.content}</div>
         <div className="mt-2 flex items-center gap-3">
           <div className="flex items-center gap-1">
-            <button aria-label="upvote" className="w-6 h-6 rounded hover:bg-zinc-800 flex items-center justify-center" onClick={()=>vote(msg.id, 1)}>⬆️</button>
-            <span className="text-xs text-zinc-400" data-testid="score">{(msg as any).score ?? 0}</span>
-            <button aria-label="downvote" className="w-6 h-6 rounded hover:bg-zinc-800 flex items-center justify-center" onClick={()=>vote(msg.id, -1)}>⬇️</button>
+            <button aria-label="upvote" className="w-6 h-6 rounded-md bg-green-600 text-white flex items-center justify-center active:translate-y-px" onClick={()=>vote(msg.id, 1)}>
+              <svg viewBox="0 0 24 24" className="w-3 h-3" aria-hidden="true"><path d="M12 5l7 12H5l7-12z" fill="currentColor"/></svg>
+            </button>
+            <span className="text-xs text-zinc-300 w-6 text-center" data-testid="score">{(msg as any).score ?? 0}</span>
+            <button aria-label="downvote" className="w-6 h-6 rounded-md bg-red-600 text-white flex items-center justify-center active:-translate-y-px" onClick={()=>vote(msg.id, -1)}>
+              <svg viewBox="0 0 24 24" className="w-3 h-3 rotate-180" aria-hidden="true"><path d="M12 5l7 12H5l7-12z" fill="currentColor"/></svg>
+            </button>
           </div>
           <button
             type="button"
@@ -142,7 +146,7 @@ export function Chat({ movieId }: { movieId: number }) {
               onChange={(e)=>setReplyInput(e.target.value)}
               onKeyDown={(e)=>{ if(e.key==='Enter') sendReply(msg.id); if(e.key==='Escape') setActiveReplyId(null); }}
               placeholder={`Ответ для ${msg.handle}…`}
-              className="flex-1 rounded-lg bg-zinc-950 px-3 py-2 outline-none ring-1 ring-zinc-800 focus:ring-zinc-600"
+              className="flex-1 min-w-0 rounded-lg bg-zinc-950 px-3 py-2 outline-none ring-1 ring-zinc-800 focus:ring-zinc-600"
             />
             <div className="relative">
               <button
@@ -164,15 +168,17 @@ export function Chat({ movieId }: { movieId: number }) {
             </div>
             <button
               onClick={()=>sendReply(msg.id)}
-              className="rounded-lg px-3 py-2 bg-zinc-200 text-zinc-900 text-sm"
+              className="rounded-lg px-3 py-2 bg-zinc-200 text-zinc-900 text-sm whitespace-nowrap"
             >
-              Отправить
+              <span className="hidden sm:inline">Отправить</span>
+              <span className="inline sm:hidden">Отпр.</span>
             </button>
             <button
               onClick={()=>{ setActiveReplyId(null); setReplyInput(''); }}
-              className="text-xs text-zinc-400 hover:text-zinc-200"
+              className="text-xs text-zinc-400 hover:text-zinc-200 whitespace-nowrap"
             >
-              Отмена
+              <span className="hidden sm:inline">Отмена</span>
+              <span className="inline sm:hidden">Отм.</span>
             </button>
           </div>
         )}
@@ -194,7 +200,7 @@ export function Chat({ movieId }: { movieId: number }) {
           onChange={e=>setInput(e.target.value)}
           onKeyDown={e=>{ if(e.key==='Enter') sendRoot(); }}
           placeholder="Напишите без регистрации..."
-          className="flex-1 rounded-lg bg-zinc-950 px-3 py-2 outline-none ring-1 ring-zinc-800 focus:ring-zinc-600"
+          className="flex-1 rounded-lg bg-zinc-950 px-3 py-2 outline-none ring-1 ring-zinc-800 focus:ring-zinc-600 min-w-0"
         />
         <div className="relative">
           <button
@@ -214,7 +220,10 @@ export function Chat({ movieId }: { movieId: number }) {
             </div>
           )}
         </div>
-        <button onClick={sendRoot} className="rounded-lg px-4 py-2 bg-zinc-200 text-zinc-900 font-medium">Отправить</button>
+        <button onClick={sendRoot} className="rounded-lg px-4 py-2 bg-zinc-200 text-zinc-900 font-medium whitespace-nowrap">
+          <span className="hidden sm:inline">Отправить</span>
+          <span className="inline sm:hidden">Отпр.</span>
+        </button>
       </div>
       <ul className="space-y-3 max-h-[60vh] overflow-auto pr-1 w-full max-w-full">
         {threadMap.roots.map(m => renderMessage(m, 0))}
