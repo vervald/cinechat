@@ -111,7 +111,7 @@ export default function HomePage() {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 overflow-x-hidden">
         {results.map(m => (
-          <Link key={m.id} href={`/movie/${m.id}`} className="block bg-zinc-900 rounded-xl overflow-hidden ring-1 ring-zinc-800 hover:ring-zinc-600">
+          <Link key={m.id} href={`/movie/${m.id}`} className="block bg-zinc-900 rounded-xl overflow-hidden ring-1 ring-zinc-800 hover:ring-zinc-600 w-full">
             <div className="aspect-[2/3] bg-zinc-800" style={{backgroundImage: m.poster_path ? `url(https://image.tmdb.org/t/p/w342${m.poster_path})` : undefined, backgroundSize: 'cover', backgroundPosition: 'center'}} />
             <div className="p-3">
               <div className="font-medium">{m.title}</div>

@@ -68,7 +68,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
             <Rating movieId={movie.id} />
             <div className="mt-2 space-y-2">
               <h2 className="font-semibold hidden md:block">Описание</h2>
-              <p className="text-sm text-zinc-300 hidden md:block">
+              <p className="text-sm text-zinc-300 hidden md:block break-words">
                 {movie.overview || 'Описание отсутствует.'}
               </p>
             </div>
