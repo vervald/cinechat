@@ -123,7 +123,23 @@ const stmtUpsertRating = db.prepare(`INSERT INTO ratings (movie_id, user_id, val
                VALUES (?, ?, ?, ?)
                ON CONFLICT(movie_id, user_id) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at`);
 const stmtInsertMsg = db.prepare('INSERT INTO messages (id, movie_id, user_id, parent_id, content, created_at) VALUES (?, ?, ?, ?, ?, ?)');
-const stmtListMsgs = db.prepare('SELECT m.id, m.parent_id, m.content, m.created_at, u.handle FROM messages m JOIN users u ON u.id = m.user_id WHERE m.movie_id = ? ORDER BY m.created_at DESC LIMIT 200');
+const stmtListMsgs = db.prepare(`
+  SELECT m.id, m.parent_id, m.content, m.created_at, u.handle,
+         COALESCE(SUM(CASE WHEN v.value=1 THEN 1 WHEN v.value=-1 THEN -1 ELSE 0 END), 0) AS score
+  FROM messages m
+  JOIN users u ON u.id = m.user_id
+  LEFT JOIN messages_votes v ON v.message_id = m.id
+  WHERE m.movie_id = ?
+  GROUP BY m.id
+  ORDER BY m.created_at DESC
+  LIMIT 200
+`);
+const stmtVoteUpsert = db.prepare(`
+  INSERT INTO messages_votes (message_id, user_id, value, updated_at)
+  VALUES (?, ?, ?, ?)
+  ON CONFLICT(message_id, user_id) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
+`);
+const stmtVoteAgg = db.prepare('SELECT COALESCE(SUM(value),0) AS score FROM messages_votes WHERE message_id = ?');
 
 app.get('/api/rating/:movieId', (req, res) => {
   const movieId = Number(req.params.movieId);
@@ -159,6 +175,18 @@ app.post('/api/chat/:movieId/messages', (req, res) => {
   const msg = { id, movieId, parent_id: parentId || null, content: content.trim(), created_at, handle: req.user.handle };
   io.to(`movie:${movieId}`).emit('chat:new', msg);
   res.json({ ok: true, message: msg });
+});
+
+// Votes
+app.post('/api/chat/:movieId/messages/:messageId/vote', (req, res) => {
+  const movieId = Number(req.params.movieId);
+  const messageId = String(req.params.messageId);
+  const value = Number(req.body.value);
+  if (!(value === 1 || value === -1)) return res.status(400).json({ error: 'bad_vote' });
+  stmtVoteUpsert.run(messageId, req.user.id, value, Date.now());
+  const row = stmtVoteAgg.get(messageId);
+  io.to(`movie:${movieId}`).emit('chat:vote', { messageId, score: row.score || 0 });
+  res.json({ ok: true, score: row.score || 0 });
 });
 
 // Socket.IO

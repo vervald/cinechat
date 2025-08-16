@@ -32,6 +32,9 @@ export function Chat({ movieId }: { movieId: number }) {
           setMessages(prev => [msg, ...prev]);
         }
       });
+      socket.on('chat:vote', (p: any) => {
+        setMessages(prev => prev.map(m => m.id === p.messageId ? ({ ...(m as any), score: p.score }) as any : m));
+      });
     })();
     return () => { active = false; socketRef.current?.disconnect(); };
   }, [movieId]);
@@ -88,6 +91,14 @@ export function Chat({ movieId }: { movieId: number }) {
   }
 
   const EMOJIS = ['😀','😁','😂','🤣','😊','😍','😎','🙌','👏','👍','🔥','💯','🎉','✨','🎬'];
+  async function vote(messageId: string, value: 1 | -1) {
+    await fetch(`${SERVER}/api/chat/${movieId}/messages/${messageId}/vote`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ value })
+    });
+  }
   function appendEmojiToRoot(e: string) { setInput(prev => prev + e); }
   function appendEmojiToReply(e: string) { setReplyInput(prev => prev + e); }
 
@@ -101,6 +112,11 @@ export function Chat({ movieId }: { movieId: number }) {
         )}
         <div className="mt-1 whitespace-pre-wrap break-words">{msg.content}</div>
         <div className="mt-2 flex items-center gap-3">
+          <div className="flex items-center gap-1">
+            <button aria-label="upvote" className="w-6 h-6 rounded hover:bg-zinc-800 flex items-center justify-center" onClick={()=>vote(msg.id, 1)}>⬆️</button>
+            <span className="text-xs text-zinc-400" data-testid="score">{(msg as any).score ?? 0}</span>
+            <button aria-label="downvote" className="w-6 h-6 rounded hover:bg-zinc-800 flex items-center justify-center" onClick={()=>vote(msg.id, -1)}>⬇️</button>
+          </div>
           <button
             type="button"
             className="text-xs text-zinc-400 hover:text-zinc-200"

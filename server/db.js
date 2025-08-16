@@ -25,6 +25,16 @@ CREATE TABLE IF NOT EXISTS messages (
 
 CREATE INDEX IF NOT EXISTS idx_messages_movie ON messages(movie_id, created_at);
 
+-- Votes per message (+1 / -1)
+CREATE TABLE IF NOT EXISTS messages_votes (
+  message_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  value INTEGER NOT NULL CHECK (value IN (-1, 1)),
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (message_id, user_id)
+);
+CREATE INDEX IF NOT EXISTS idx_votes_message ON messages_votes(message_id);
+
 CREATE TABLE IF NOT EXISTS ratings (
   movie_id INTEGER NOT NULL,
   user_id TEXT NOT NULL,
