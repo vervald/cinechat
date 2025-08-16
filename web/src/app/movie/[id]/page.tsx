@@ -25,7 +25,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
   if (!movie) return <div className="text-zinc-400">Загрузка...</div>;
 
   return (
-    <div className="grid md:grid-cols-3 gap-6">
+    <div className="grid md:grid-cols-3 gap-6 w-full max-w-full overflow-x-hidden">
       <div className="md:col-span-1 w-full">
         <div className="rounded-xl overflow-hidden ring-1 ring-zinc-800 bg-zinc-900 w-full">
           <div className="hidden md:block">
@@ -75,7 +75,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
           </div>
         </div>
       </div>
-      <div className="md:col-span-2 space-y-4">
+      <div className="md:col-span-2 space-y-4 w-full max-w-full overflow-x-hidden">
         <Chat movieId={movie.id} />
       </div>
     </div>
