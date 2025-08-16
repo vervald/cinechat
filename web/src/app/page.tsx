@@ -61,7 +61,7 @@ export default function HomePage() {
   }, [query]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-full overflow-x-hidden">
       <div className="flex gap-2">
         <input
           value={query}

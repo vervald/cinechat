@@ -94,7 +94,7 @@ export function Chat({ movieId }: { movieId: number }) {
   function renderMessage(msg: Msg, depth = 0) {
     const children = threadMap.idToChildren.get(msg.id) || [];
     return (
-      <li key={msg.id} className="rounded-lg bg-zinc-950 ring-1 ring-zinc-800 p-3 w-full" style={{ paddingLeft: depth ? depth * 16 : 0 }}>
+      <li key={msg.id} className="rounded-lg bg-zinc-950 ring-1 ring-zinc-800 p-3 w-full max-w-full" style={{ paddingLeft: depth ? depth * 16 : 0 }}>
         <div className="text-xs text-zinc-400">{new Date(msg.created_at).toLocaleString()} • {msg.handle}</div>
         {msg.parent_id && (
           <div className="text-[11px] text-zinc-500">В ответ на ветку</div>
@@ -170,7 +170,7 @@ export function Chat({ movieId }: { movieId: number }) {
   }
 
   return (
-    <section className="rounded-xl ring-1 ring-zinc-800 bg-zinc-900 p-4">
+    <section className="rounded-xl ring-1 ring-zinc-800 bg-zinc-900 p-4 w-full max-w-full overflow-x-hidden">
       <h2 className="font-semibold mb-3">Чат</h2>
       <div className="flex gap-2 mb-3">
         <input
@@ -200,7 +200,7 @@ export function Chat({ movieId }: { movieId: number }) {
         </div>
         <button onClick={sendRoot} className="rounded-lg px-4 py-2 bg-zinc-200 text-zinc-900 font-medium">Отправить</button>
       </div>
-      <ul className="space-y-3 max-h-[60vh] overflow-auto pr-1">
+      <ul className="space-y-3 max-h-[60vh] overflow-auto pr-1 w-full max-w-full">
         {threadMap.roots.map(m => renderMessage(m, 0))}
       </ul>
     </section>

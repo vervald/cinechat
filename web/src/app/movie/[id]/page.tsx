@@ -26,8 +26,8 @@ export default function MoviePage({ params }: { params: { id: string } }) {
 
   return (
     <div className="grid md:grid-cols-3 gap-6">
-      <div className="md:col-span-1">
-        <div className="rounded-xl overflow-hidden ring-1 ring-zinc-800 bg-zinc-900 max-w-sm mx-auto md:max-w-none">
+      <div className="md:col-span-1 w-full">
+        <div className="rounded-xl overflow-hidden ring-1 ring-zinc-800 bg-zinc-900 w-full">
           <div className="hidden md:block">
             {movie.poster_path ? (
               <Image
