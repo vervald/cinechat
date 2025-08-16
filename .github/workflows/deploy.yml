@@ -45,4 +45,4 @@ jobs:
             fi
             pnpm install --frozen-lockfile
             pnpm --filter cinechat-web build
-            sudo systemctl restart cinechat-server cinechat-web"
+            sudo systemctl restart cinechat-server cinechat-web
