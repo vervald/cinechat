@@ -36,14 +36,13 @@ jobs:
           script: |
             set -e
             APP_DIR=${{ secrets.APP_DIR }}
-            SERVICE_USER=${{ secrets.SERVICE_USER }}
             if [ ! -d "$APP_DIR" ]; then sudo mkdir -p "$APP_DIR"; fi
             cd "$APP_DIR"
             if [ -d .git ]; then
-              sudo -u "$SERVICE_USER" git pull --ff-only
+               git pull --ff-only
             else
-              sudo -u "$SERVICE_USER" git clone https://github.com/${{ github.repository }} .
+               git clone https://github.com/${{ github.repository }} .
             fi
-            sudo -u "$SERVICE_USER" pnpm install --frozen-lockfile
-            sudo -u "$SERVICE_USER" pnpm --filter cinechat-web build
+            pnpm install --frozen-lockfile
+            pnpm --filter cinechat-web build
             sudo systemctl restart cinechat-server@"$SERVICE_USER" cinechat-web@"$SERVICE_USER"
