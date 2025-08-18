@@ -199,7 +199,7 @@ export function Chat({ movieId }: { movieId: number }) {
   }
 
   return (
-    <section className="rounded-xl ring-1 ring-zinc-800 bg-zinc-900 p-4 w-full max-w-full overflow-x-hidden">
+    <section className="rounded-xl ring-1 ring-zinc-800 bg-zinc-900 p-4 w-full max-w-full overflow-x-hidden shadow-lg/10">
       <h2 className="font-semibold mb-3">Чат</h2>
       <div className="flex gap-2 mb-3">
         <input

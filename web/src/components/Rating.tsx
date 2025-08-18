@@ -75,7 +75,7 @@ export function Rating({ movieId }: { movieId: number }) {
               onClick={()=>setRating(v)}
               aria-label={`${v} из 10`}
               title={`${v} из 10`}
-              className={`w-8 h-8 rounded-md text-sm ring-1 ring-zinc-800 ${active ? 'bg-amber-400 text-zinc-900 ring-amber-400' : 'bg-zinc-950 hover:bg-zinc-800'}`}
+              className={`w-8 h-8 rounded-md text-sm ring-1 ring-zinc-800 transition-colors ${active ? 'bg-amber-400 text-zinc-900 ring-amber-400' : 'bg-zinc-950 hover:bg-zinc-800'}`}
             >
               {v}
             </button>

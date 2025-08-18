@@ -74,12 +74,12 @@ export default function HomePage() {
       </div>
 
       {query.trim().length >= 2 && (suggestLoading || suggestions.length > 0) && (
-        <div data-testid="suggestions" className="rounded-lg bg-zinc-900 ring-1 ring-zinc-800 divide-y divide-zinc-800 overflow-hidden">
+        <div data-testid="suggestions" className="rounded-lg bg-zinc-900 ring-1 ring-zinc-800 divide-y divide-zinc-800 overflow-hidden shadow-lg/10">
           {suggestLoading && suggestions.length === 0 && (
             <div className="px-3 py-2 text-sm text-zinc-400">Поиск рекомендаций…</div>
           )}
           {suggestions.map(m => (
-            <Link key={m.id} href={`/movie/${m.id}`} className="block px-3 py-2 hover:bg-zinc-800">
+            <Link key={m.id} href={`/movie/${m.id}`} className="block px-3 py-2 hover:bg-zinc-800 transition-colors">
               <div className="flex items-center gap-3">
                 <div className="shrink-0">
                   {m.poster_path ? (
@@ -111,7 +111,7 @@ export default function HomePage() {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 overflow-x-hidden">
         {results.map(m => (
-          <Link key={m.id} href={`/movie/${m.id}`} className="block bg-zinc-900 rounded-xl overflow-hidden ring-1 ring-zinc-800 hover:ring-zinc-600 w-full">
+          <Link key={m.id} href={`/movie/${m.id}`} className="block bg-zinc-900 rounded-xl overflow-hidden ring-1 ring-zinc-800 hover:ring-zinc-600 w-full transition-shadow hover:shadow-lg/10">
             <div className="aspect-[2/3] bg-zinc-800" style={{backgroundImage: m.poster_path ? `url(https://image.tmdb.org/t/p/w342${m.poster_path})` : undefined, backgroundSize: 'cover', backgroundPosition: 'center'}} />
             <div className="p-3">
               <div className="font-medium">{m.title}</div>
