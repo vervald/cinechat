@@ -28,15 +28,15 @@ export default function MoviePage({ params }: { params: { id: string } }) {
     <div className="grid md:grid-cols-3 gap-6 w-full max-w-full overflow-x-hidden">
       <div className="md:col-span-1 w-full">
         <div className="rounded-xl overflow-hidden ring-1 ring-zinc-800 bg-zinc-900 w-full">
-          <div className="hidden md:block">
+          <div className="hidden md:flex justify-center">
             {movie.poster_path ? (
               <Image
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={movie.title}
-                width={500} height={750}
-                className="w-full h-auto"
+                width={350} height={525}
+                className="w-[260px] h-auto"
               />
-            ) : <div className="aspect-[2/3] bg-zinc-800" />}
+            ) : <div className="aspect-[2/3] bg-zinc-800 w-[260px]" />}
           </div>
           <div className="p-4 space-y-3">
             <div className="flex items-start gap-3 md:hidden">
