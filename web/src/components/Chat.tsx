@@ -105,7 +105,11 @@ export function Chat({ movieId }: { movieId: number }) {
   function renderMessage(msg: Msg, depth = 0) {
     const children = threadMap.idToChildren.get(msg.id) || [];
     return (
-      <li key={msg.id} className="rounded-lg bg-zinc-950 ring-1 ring-zinc-800 p-3 w-full max-w-full" style={{ paddingLeft: depth ? depth * 16 : 0 }}>
+      <li
+        key={msg.id}
+        className="rounded-lg bg-zinc-950 ring-1 ring-zinc-800 p-3 w-full max-w-full"
+        style={{ paddingLeft: 12 + depth * 16 }}
+      >
         <div className="text-xs text-zinc-400">{new Date(msg.created_at).toLocaleString()} • {msg.handle}</div>
         {msg.parent_id && (
           <div className="text-[11px] text-zinc-500">В ответ на ветку</div>
