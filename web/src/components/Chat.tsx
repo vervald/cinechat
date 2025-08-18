@@ -16,6 +16,7 @@ export function Chat({ movieId }: { movieId: number }) {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [showRootEmoji, setShowRootEmoji] = useState(false);
   const [showReplyEmoji, setShowReplyEmoji] = useState(false);
+  const [sortMode, setSortMode] = useState<'new' | 'top'>('new');
 
   useEffect(() => {
     let active = true;
@@ -64,7 +65,7 @@ export function Chat({ movieId }: { movieId: number }) {
     });
   }
 
-  function buildThreadTree(msgs: Msg[]) {
+  function buildThreadTree(msgs: Msg[], mode: 'new' | 'top') {
     const idToChildren = new Map<string, Msg[]>();
     const roots: Msg[] = [];
     for (const m of msgs) {
@@ -77,10 +78,13 @@ export function Chat({ movieId }: { movieId: number }) {
       }
     }
     // keep original order within each group (messages is already sorted desc by created_at)
+    if (mode === 'top') {
+      roots.sort((a: any, b: any) => (b.score || 0) - (a.score || 0));
+    }
     return { roots, idToChildren };
   }
 
-  const threadMap = useMemo(() => buildThreadTree(messages), [messages]);
+  const threadMap = useMemo(() => buildThreadTree(messages, sortMode), [messages, sortMode]);
 
   function toggleExpand(id: string) {
     setExpandedIds(prev => {
@@ -200,7 +204,25 @@ export function Chat({ movieId }: { movieId: number }) {
 
   return (
     <section className="rounded-xl ring-1 ring-zinc-800 bg-zinc-900 p-4 w-full max-w-full overflow-x-hidden shadow-lg/10">
-      <h2 className="font-semibold mb-3">Чат</h2>
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h2 className="font-semibold">Чат</h2>
+        <div className="flex items-center rounded-lg ring-1 ring-zinc-800 overflow-hidden text-xs">
+          <button
+            className={`px-2 py-1 ${sortMode==='new' ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:text-zinc-200'}`}
+            onClick={()=>setSortMode('new')}
+            aria-pressed={sortMode==='new'}
+          >
+            По новизне
+          </button>
+          <button
+            className={`px-2 py-1 ${sortMode==='top' ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:text-zinc-200'}`}
+            onClick={()=>setSortMode('top')}
+            aria-pressed={sortMode==='top'}
+          >
+            По рейтингу
+          </button>
+        </div>
+      </div>
       <div className="flex gap-2 mb-3">
         <input
           value={input}
