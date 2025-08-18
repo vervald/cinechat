@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 4000;
 const ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:3000';
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const TMDB_LANG = process.env.TMDB_LANG || 'ru-RU';
+const TEST_MODE = process.env.TEST_MODE === '1';
 if (!TMDB_API_KEY) {
   console.warn('⚠️  No TMDB_API_KEY set. Search/movie endpoints will fail until provided.');
 }
@@ -74,6 +75,13 @@ app.get('/api/search', async (req, res) => {
   const q = String(req.query.q || '');
   const page = Number(req.query.page || 1);
   try {
+    if (TEST_MODE) {
+      return res.json({
+        results: [
+          { id: 123456, media_type: 'movie', title: 'Тестовый фильм', poster_path: null, release_date: '2024-01-01' }
+        ]
+      });
+    }
     let url;
     if (q) {
       url = `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&language=${TMDB_LANG}&query=${encodeURIComponent(q)}&page=${page}`;
@@ -99,6 +107,9 @@ app.get('/api/search', async (req, res) => {
 app.get('/api/movie/:id', async (req, res) => {
   const id = req.params.id;
   try {
+    if (TEST_MODE) {
+      return res.json({ id, title: 'Тестовый фильм', overview: 'Описание для e2e тестов.', poster_path: null, release_date: '2024-01-01' });
+    }
     const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=${TMDB_LANG}`;
     const key = `movie:${id}`;
     const now = Date.now();
