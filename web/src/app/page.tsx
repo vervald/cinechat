@@ -78,8 +78,8 @@ export default function HomePage() {
           {suggestLoading && suggestions.length === 0 && (
             <div className="px-3 py-2 text-sm text-zinc-400">Поиск рекомендаций…</div>
           )}
-          {suggestions.map(m => (
-            <Link key={m.id} href={`/movie/${m.id}`} className="block px-3 py-2 hover:bg-zinc-800 transition-colors">
+          {suggestions.map((m:any) => (
+            <Link key={m.id} href={m.media_type==='tv' ? `/tv/${m.id}` : `/movie/${m.id}`} className="block px-3 py-2 hover:bg-zinc-800 transition-colors">
               <div className="flex items-center gap-3">
                 <div className="shrink-0">
                   {m.poster_path ? (
@@ -95,8 +95,8 @@ export default function HomePage() {
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="truncate">{(m as any).title ?? (m as any).name}</div>
-                  <div className="text-xs text-zinc-400">{(m.release_date || (m as any).first_air_date)?.slice(0,4) || ''}</div>
+                  <div className="truncate">{m.title ?? m.name}</div>
+                  <div className="text-xs text-zinc-400">{(m.release_date || m.first_air_date)?.slice(0,4) || ''}</div>
                 </div>
               </div>
             </Link>
@@ -110,12 +110,12 @@ export default function HomePage() {
       {loading && <div className="text-zinc-400">Загрузка...</div>}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 overflow-x-hidden">
-        {results.map(m => (
-          <Link key={m.id} href={`/movie/${m.id}`} className="block bg-zinc-900 rounded-xl overflow-hidden ring-1 ring-zinc-800 hover:ring-zinc-600 w-full transition-shadow hover:shadow-lg/10">
+        {results.map((m:any) => (
+          <Link key={m.id} href={m.media_type==='tv' ? `/tv/${m.id}` : `/movie/${m.id}`} className="block bg-zinc-900 rounded-xl overflow-hidden ring-1 ring-zinc-800 hover:ring-zinc-600 w-full transition-shadow hover:shadow-lg/10">
             <div className="aspect-[2/3] bg-zinc-800" style={{backgroundImage: m.poster_path ? `url(https://image.tmdb.org/t/p/w342${m.poster_path})` : undefined, backgroundSize: 'cover', backgroundPosition: 'center'}} />
             <div className="p-3">
-              <div className="font-medium">{m.title}</div>
-              <div className="text-xs text-zinc-400">{m.release_date?.slice(0,4) || ''}</div>
+              <div className="font-medium">{m.title ?? m.name}</div>
+              <div className="text-xs text-zinc-400">{(m.release_date || m.first_air_date)?.slice(0,4) || ''}</div>
             </div>
           </Link>
         ))}

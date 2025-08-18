@@ -127,6 +127,70 @@ app.get('/api/movie/:id', async (req, res) => {
   }
 });
 
+// TV endpoints
+app.get('/api/tv/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    if (TEST_MODE) {
+      return res.json({ id, name: 'Тестовый сериал', overview: 'Описание сериала.', first_air_date: '2024-01-01', poster_path: null, number_of_seasons: 1 });
+    }
+    const url = `https://api.themoviedb.org/3/tv/${id}?api_key=${TMDB_API_KEY}&language=${TMDB_LANG}`;
+    const key = `tv:${id}`;
+    const now = Date.now();
+    const cached = tmdbCache.get(key);
+    if (cached && now - cached.ts < TMDB_TTL_MS) return res.json(cached.data);
+    const r = await fetch(url);
+    const data = await r.json();
+    tmdbCache.set(key, { ts: now, data });
+    res.json(data);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'tmdb_failed' });
+  }
+});
+
+app.get('/api/tv/:id/season/:season', async (req, res) => {
+  const { id, season } = req.params;
+  try {
+    if (TEST_MODE) {
+      return res.json({ id: `${id}-s${season}`, name: `Сезон ${season}`, episodes: [{ id: 987654, name: 'Эпизод 1', episode_number: 1, overview: 'Описание эпизода.' }] });
+    }
+    const url = `https://api.themoviedb.org/3/tv/${id}/season/${season}?api_key=${TMDB_API_KEY}&language=${TMDB_LANG}`;
+    const key = `tv:${id}:s:${season}`;
+    const now = Date.now();
+    const cached = tmdbCache.get(key);
+    if (cached && now - cached.ts < TMDB_TTL_MS) return res.json(cached.data);
+    const r = await fetch(url);
+    const data = await r.json();
+    tmdbCache.set(key, { ts: now, data });
+    res.json(data);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'tmdb_failed' });
+  }
+});
+
+app.get('/api/tv/:id/season/:season/episode/:episode', async (req, res) => {
+  const { id, season, episode } = req.params;
+  try {
+    if (TEST_MODE) {
+      return res.json({ id: 987654, name: `Эпизод ${episode}`, overview: 'Описание эпизода.', air_date: '2024-01-02', still_path: null, season_number: Number(season), episode_number: Number(episode) });
+    }
+    const url = `https://api.themoviedb.org/3/tv/${id}/season/${season}/episode/${episode}?api_key=${TMDB_API_KEY}&language=${TMDB_LANG}`;
+    const key = `tv:${id}:s:${season}:e:${episode}`;
+    const now = Date.now();
+    const cached = tmdbCache.get(key);
+    if (cached && now - cached.ts < TMDB_TTL_MS) return res.json(cached.data);
+    const r = await fetch(url);
+    const data = await r.json();
+    tmdbCache.set(key, { ts: now, data });
+    res.json(data);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'tmdb_failed' });
+  }
+});
+
 // Ratings
 const stmtRatingsAgg = db.prepare('SELECT COUNT(*) AS cnt, AVG(value) AS avg FROM ratings WHERE movie_id = ?');
 const stmtRatingMine = db.prepare('SELECT value FROM ratings WHERE movie_id = ? AND user_id = ?');
