@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </Link>
           </div>
         </div>
-        <div className="max-w-6xl mx-auto p-4 w-full max-w-full overflow-x-hidden">{children}</div>
+        <div className="max-w-6xl mx-auto p-4 w-full overflow-x-hidden">{children}</div>
       </body>
     </html>
   );

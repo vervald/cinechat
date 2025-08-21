@@ -204,9 +204,9 @@ export function Chat({ movieId }: { movieId: number }) {
 
   return (
     <section className="rounded-xl ring-1 ring-zinc-800 bg-zinc-900 p-4 w-full max-w-full overflow-x-hidden shadow-lg/10">
-      <div className="mb-3 flex items-center justify-between gap-3">
+      <div className="mb-3 flex items-center justify-between gap-3 flex-wrap">
         <h2 className="font-semibold">Чат</h2>
-        <div className="flex items-center rounded-lg ring-1 ring-zinc-800 overflow-hidden text-xs">
+        <div className="flex items-center rounded-lg ring-1 ring-zinc-800 overflow-hidden text-xs shrink-0">
           <button
             className={`px-2 py-1 ${sortMode==='new' ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:text-zinc-200'}`}
             onClick={()=>setSortMode('new')}
@@ -223,7 +223,7 @@ export function Chat({ movieId }: { movieId: number }) {
           </button>
         </div>
       </div>
-      <div className="flex gap-2 mb-3">
+      <div className="flex flex-wrap items-center gap-2 mb-3">
         <input
           value={input}
           onChange={e=>setInput(e.target.value)}

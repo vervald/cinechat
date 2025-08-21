@@ -62,7 +62,7 @@ export default function HomePage() {
 
   return (
     <div className="space-y-6 w-full max-w-full overflow-x-hidden">
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap items-center">
         <input
           value={query}
           onChange={e=>setQuery(e.target.value)}
